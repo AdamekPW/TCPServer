@@ -16,6 +16,12 @@ class Server {
         this.ServerIP = ServerIP;
         this.ServerPort = ServerPort;
     }
+
+    ~Server() {
+        Stop();
+        KillTunnel();
+        Console.WriteLine("Server is offline");
+    }
     
     public void Start(){
         if (IsServerRunning){
@@ -35,7 +41,7 @@ class Server {
         IsServerRunning = false;
         Console.WriteLine("Server stoped");       
     }
-
+    
 
     private void Run(){
         TcpListener server = null!;
@@ -55,8 +61,7 @@ class Server {
                     // Utwórz nowy wątek do obsługi połączenia
                     ClientHandler clientHandler = new ClientHandler();
                     clientHandler.HandleClient(client);
-                }
-                
+                }     
 				
             }
         }
