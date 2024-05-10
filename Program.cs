@@ -1,1 +1,1 @@
-﻿Console.WriteLine("Hello");
+﻿Console.WriteLine("Main function started");
