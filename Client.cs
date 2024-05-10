@@ -5,7 +5,7 @@ class CustomClient
 {
     public string ServerIP { get; set; } = null!;
 	public int ServerPort { get; set; }
-
+    //147.185.221.19:48025
 	public CustomClient(string ServerIP, int ServerPort)
 	{
 		this.ServerIP = ServerIP;

@@ -8,27 +8,34 @@ using System.Threading;
 class Server {
     public string ServerIP {get; set;}
     public int ServerPort {get; set;}
-    Thread? ServerThread = null;
+    Thread ServerThread = null!;
+    Process? TunnelProcess = null;
     
+    private bool IsServerRunning = false;
     public Server(string ServerIP, int ServerPort){
         this.ServerIP = ServerIP;
         this.ServerPort = ServerPort;
     }
     
     public void Start(){
-        if (ServerThread != null){
+        if (IsServerRunning){
             Console.WriteLine("Server already running!\n");
             return;
         }
         ServerThread = new Thread(this.Run);
         ServerThread.Start();
+        IsServerRunning = true;
+        Console.WriteLine("Server started");
     }
     public void Stop(){
-        if (ServerThread != null){
-            ServerThread.Join();
-            ServerThread = null;
+        if (!IsServerRunning){
+            Console.WriteLine("Server is not running");
+            return;
         }
+        IsServerRunning = false;
+        Console.WriteLine("Server stoped");       
     }
+
 
     private void Run(){
         TcpListener server = null!;
@@ -40,14 +47,17 @@ class Server {
             Console.WriteLine("Serwer TCP uruchomiony na adresie: " + ServerIP + " na porcie: " + ServerPort);
 			Console.WriteLine("Oczekiwanie na połączenia...");
 
-            while (true){
-                // Akceptuj nowe połączenie
-				TcpClient client = server.AcceptTcpClient();
-				Console.WriteLine("Nowe połączenie!");
+            while (IsServerRunning){
+                if (server.Pending()){
+                    TcpClient client = server.AcceptTcpClient();
+                    Console.WriteLine("Nowe połączenie!");
 
-				// Utwórz nowy wątek do obsługi połączenia
-				ClientHandler clientHandler = new ClientHandler();
-				clientHandler.HandleClient(client);
+                    // Utwórz nowy wątek do obsługi połączenia
+                    ClientHandler clientHandler = new ClientHandler();
+                    clientHandler.HandleClient(client);
+                }
+                
+				
             }
         }
         catch (Exception e){
@@ -58,4 +68,24 @@ class Server {
         }
     }
 
+    public void StartTunnel(){
+        if (TunnelProcess != null){
+            Console.WriteLine("Tunnel already running");
+            return;
+        }
+        TunnelProcess = new Process();
+        TunnelProcess.StartInfo.FileName = @"C:\Program Files\playit_gg\bin\playit.exe";
+        TunnelProcess.Start();
+        
+    }
+
+    public void KillTunnel(){
+        if (TunnelProcess == null){
+            Console.WriteLine("Tunnel doesn't exist");
+            return;
+        }
+        TunnelProcess.Kill();
+        TunnelProcess = null;
+        Console.WriteLine("Tunnel terminated");
+    }
 }
