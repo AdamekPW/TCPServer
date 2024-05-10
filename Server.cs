@@ -21,10 +21,12 @@ class Server {
             return;
         }
         ServerThread = new Thread(this.Run);
+        ServerThread.Start();
     }
     public void Stop(){
         if (ServerThread != null){
             ServerThread.Join();
+            ServerThread = null;
         }
     }
 

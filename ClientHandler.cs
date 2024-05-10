@@ -9,19 +9,16 @@ class ClientHandler
 {
 	public void HandleClient(TcpClient client)
 	{
-		NetworkStream stream = null;
+		NetworkStream stream = null!;
 		try
 		{
-			// Pobierz strumień danych dla klienta
 			stream = client.GetStream();
 
 			byte[] buffer = new byte[1024];
 			int bytesRead;
 
-			// Czytaj dane od klienta
 			while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) != 0)
 			{
-				// Konwertuj dane na string
 				string data = Encoding.ASCII.GetString(buffer, 0, bytesRead);
 				Console.WriteLine("Odebrano: " + data);
 
@@ -36,7 +33,7 @@ class ClientHandler
 		}
 		finally
 		{
-			// Zamknij połączenie
+			
 			stream.Close();
 			client.Close();
 		}
