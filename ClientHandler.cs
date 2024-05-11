@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-
+using Newtonsoft.Json;
 class ClientHandler
 {
 	public void HandleClient(TcpClient client)
@@ -16,16 +16,21 @@ class ClientHandler
 
 			byte[] buffer = new byte[1024];
 			int bytesRead;
-
-			while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) != 0)
+			string JsonString = "";
+			
+			while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
 			{
-				string data = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-				Console.WriteLine("Odebrano: " + data);
-
-				// Odpowiedz klientowi
-				byte[] response = Encoding.ASCII.GetBytes("Otrzymano: " + data);
-				stream.Write(response, 0, response.Length);
+				JsonString += Encoding.UTF8.GetString(buffer, 0, bytesRead);
+				if (bytesRead < buffer.Length)
+				{
+					break;
+				}
 			}
+			Message? message = JsonConvert.DeserializeObject<Message>(JsonString);
+			if (message != null){
+				Console.WriteLine(message.Data);
+			}
+
 		}
 		catch (Exception e)
 		{

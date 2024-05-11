@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-
+using Newtonsoft.Json;
 class Server {
     public string ServerIP {get; set;}
     public int ServerPort {get; set;}

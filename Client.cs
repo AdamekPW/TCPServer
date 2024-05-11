@@ -1,6 +1,6 @@
 using System.Net.Sockets;
 using System.Text;
-
+using Newtonsoft.Json;
 class CustomClient
 {
     public string ServerIP { get; set; } = null!;
@@ -26,17 +26,20 @@ class CustomClient
             Console.WriteLine("Polączono z serwerem");
             NetworkStream stream = client.GetStream();
             
-            //wysylanie wiadomosci
-            Console.Write("Wpisz wiadomość: ");
-            byte[] data = Encoding.ASCII.GetBytes("Hello from client");
-            stream.Write(data, 0, data.Length);
+            Message message = new Message("Hello from client");
+            string jsonData = JsonConvert.SerializeObject(message);
+            byte[] jsonDataBytes = Encoding.UTF8.GetBytes(jsonData);
 
-            //odbieranie odpowiedzi
-            data = new byte[256];
-            string responseData = string.Empty;
-            int bytesRead = stream.Read(data, 0, data.Length);
-            responseData = Encoding.ASCII.GetString(data, 0, bytesRead);
-            Console.WriteLine("Odpowiedź serwera: " + responseData);
+            int bufferSize = 1024; // Rozmiar bufora
+            int bytesSent = 0;
+            while (bytesSent < jsonDataBytes.Length)
+            {
+                int remainingBytes = jsonDataBytes.Length - bytesSent;
+                int bytesToSend = Math.Min(bufferSize, remainingBytes);
+                stream.Write(jsonDataBytes, bytesSent, bytesToSend);
+                bytesSent += bytesToSend;
+                Console.WriteLine("Doszlo");
+            }
             
 
         } catch (Exception e){
