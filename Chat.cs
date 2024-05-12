@@ -8,6 +8,7 @@ public class Chat {
 
     public List<string> Users;
     public LinkedList<Message> Messages = new LinkedList<Message>();
+    private LinkedListNode<Message>? HistoryPointer = null;
     public static string ChatsDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Chats");
     private string ChatFileName = "";
 
@@ -19,6 +20,7 @@ public class Chat {
         Users = new List<string>(){ User1, User2 };
         ChatFileName = CreateFileName(this.Users);     
     }
+    
     public Chat(List<string> Users){
         this.Users = Users;
         ChatFileName = CreateFileName(this.Users);
@@ -28,11 +30,22 @@ public class Chat {
         Messages.AddLast(message);
     }
 
+    public List<Message> GetHistory(int n){
+        if (HistoryPointer == null){
+            HistoryPointer = Messages.Last;
+        }
+        List<Message> messages = new List<Message>();
+        while (HistoryPointer != null && n-- > 0){
+            messages.Add(HistoryPointer.Value);
+            HistoryPointer = HistoryPointer.Previous;
+        }
+        return messages;
+    }
+
     public string FilePath {
         get { return Path.Combine(ChatsDirectory, ChatFileName); }
     }
 
-    
     private static string CreateFileName(List<string> Users){
         Users.Sort();
         string input = "";
@@ -52,20 +65,8 @@ public class Chat {
         return ChatFileName;
     }
     
-    
-    public List<Message> GetHistory(int n, LinkedListNode<Message>? Current = null){
-        if (Current == null){
-            Current = Messages.Last;
-        }
-        List<Message> messages = new List<Message>();
-        while (Current != null){
-            messages.Add(Current.Value);
-            Current = Current.Previous;
-        }
-        return messages;
-    }
-    
     public static void WriteToFile(Chat chat){
+        chat.ChatFileName = CreateFileName(chat.Users);
         string jsonData = JsonConvert.SerializeObject(chat, Formatting.Indented);
         File.WriteAllText(chat.FilePath + ".json", jsonData);
     }
@@ -81,8 +82,7 @@ public class Chat {
         return chat;
        
     }
-
-
+    
     public void Print(){
             foreach (var item in Messages){
                 Console.WriteLine(item.Data);
