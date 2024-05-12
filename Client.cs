@@ -5,6 +5,8 @@ class CustomClient
 {
     public string ServerIP { get; set; } = null!;
 	public int ServerPort { get; set; }
+
+    private int bufferSize = 1024;
     //147.185.221.19:48025
 	public CustomClient(string ServerIP, int ServerPort)
 	{
@@ -30,7 +32,6 @@ class CustomClient
             string jsonData = JsonConvert.SerializeObject(message);
             byte[] jsonDataBytes = Encoding.UTF8.GetBytes(jsonData);
 
-            int bufferSize = 1024; // Rozmiar bufora
             int bytesSent = 0;
             while (bytesSent < jsonDataBytes.Length)
             {
@@ -45,6 +46,28 @@ class CustomClient
         } catch (Exception e){
             Console.WriteLine("Błąd: " + e.Message);
         }
+    }
+
+    public void SendMessage(Message message){
+        try {
+            TcpClient client = new TcpClient(ServerIP, ServerPort);
+            NetworkStream stream = client.GetStream();
+        
+            string jsonData = JsonConvert.SerializeObject(message);
+            byte[] jsonDataBytes = Encoding.UTF8.GetBytes(jsonData);
+
+            int bytesSent = 0;
+            while (bytesSent < jsonDataBytes.Length)
+            {
+                int remainingBytes = jsonDataBytes.Length - bytesSent;
+                int bytesToSend = Math.Min(bufferSize, remainingBytes);
+                stream.Write(jsonDataBytes, bytesSent, bytesToSend);
+                bytesSent += bytesToSend;
+
+            }
+        } catch (Exception e){
+            Console.WriteLine("Error: " + e.Message);
+        } 
     }
 
 
