@@ -20,13 +20,13 @@ class CustomClient
     public void ConnectionTest() 
     {
         Thread.Sleep(1000);
-        Console.WriteLine($"Próba nawiązania połączenia z ServerIP:{ServerPort}");
+        Console.WriteLine($"Próba nawiązania połączenia z {ServerIP}:{ServerPort}");
         try {
             TcpClient client = new TcpClient(ServerIP, ServerPort);
             Console.WriteLine("Polączono z serwerem");
             NetworkStream stream = client.GetStream();
             
-            Message message = new Message("Hello from client");
+            Message message = new Message("Stop");
             string jsonData = JsonConvert.SerializeObject(message);
             byte[] jsonDataBytes = Encoding.UTF8.GetBytes(jsonData);
 
@@ -38,7 +38,7 @@ class CustomClient
                 int bytesToSend = Math.Min(bufferSize, remainingBytes);
                 stream.Write(jsonDataBytes, bytesSent, bytesToSend);
                 bytesSent += bytesToSend;
-                Console.WriteLine("Doszlo");
+
             }
             
 

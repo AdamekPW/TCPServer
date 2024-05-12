@@ -7,8 +7,9 @@ using System.Threading;
 using Newtonsoft.Json;
 class ClientHandler
 {
-	public void HandleClient(TcpClient client)
+	public Message? HandleClient(TcpClient client)
 	{
+		Message? message = null;
 		NetworkStream stream = null!;
 		try
 		{
@@ -26,10 +27,7 @@ class ClientHandler
 					break;
 				}
 			}
-			Message? message = JsonConvert.DeserializeObject<Message>(JsonString);
-			if (message != null){
-				Console.WriteLine(message.Data);
-			}
+			message = JsonConvert.DeserializeObject<Message>(JsonString);
 
 		}
 		catch (Exception e)
@@ -42,5 +40,6 @@ class ClientHandler
 			stream.Close();
 			client.Close();
 		}
+		return message;
 	}
 }

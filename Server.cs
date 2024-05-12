@@ -60,7 +60,13 @@ class Server {
 
                     // Utwórz nowy wątek do obsługi połączenia
                     ClientHandler clientHandler = new ClientHandler();
-                    clientHandler.HandleClient(client);
+                    Message? message = clientHandler.HandleClient(client);
+                    if (message != null){
+                        Console.WriteLine(message.Data);
+                        if (message.Data == "Stop"){
+                            server.Stop();
+                        }
+                    }
                 }     
 				
             }
