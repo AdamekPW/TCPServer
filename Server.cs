@@ -8,6 +8,8 @@ using Newtonsoft.Json;
 class Server {
     public string ServerIP {get; set;}
     public int ServerPort {get; set;}
+
+    public List<string> ActiveUsers = new();
     Thread ServerThread = null!;
     Process? TunnelProcess = null;
     
@@ -59,8 +61,8 @@ class Server {
                     Console.WriteLine("Nowe połączenie!");
 
                     // Utwórz nowy wątek do obsługi połączenia
-                    ClientHandler clientHandler = new ClientHandler();
-                    Message? message = clientHandler.HandleClient(client);
+                    
+                    Message? message = HandleClient(client);
                     if (message != null){
                         Console.WriteLine(message.Data);
                         if (message.Data == "Stop"){
@@ -99,4 +101,41 @@ class Server {
         TunnelProcess = null;
         Console.WriteLine("Tunnel terminated");
     }
+
+
+    public Message? HandleClient(TcpClient client)
+	{
+		Message? message = null;
+		NetworkStream stream = null!;
+		try
+		{
+			stream = client.GetStream();
+
+			byte[] buffer = new byte[1024];
+			int bytesRead;
+			string JsonString = "";
+			
+			while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
+			{
+				JsonString += Encoding.UTF8.GetString(buffer, 0, bytesRead);
+				if (bytesRead < buffer.Length)
+				{
+					break;
+				}
+			}
+			message = JsonConvert.DeserializeObject<Message>(JsonString);
+
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine("Błąd obsługi klienta: " + e.Message);
+		}
+		finally
+		{
+			
+			stream.Close();
+			client.Close();
+		}
+		return message;
+	}
 }

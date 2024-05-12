@@ -6,6 +6,7 @@ using System.Text;
 using System.IO;
 public class Chat {
 
+    public string name = "MyChat";
     public List<string> Users;
     public LinkedList<Message> Messages = new LinkedList<Message>();
     private LinkedListNode<Message>? HistoryPointer = null;
