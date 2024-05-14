@@ -1,5 +1,8 @@
-﻿Database.Init();
-// List<string> Usernames = new(){"Adam", "Ola", "Kasia", "Piotr"};
+﻿
+
+List<string> Usernames = new(){"Adam", "Ola", "Kasia", "Piotr"};
+Chat chat = Chat.ReadFromFile(Usernames);
+chat.Print();
 // using Database DB = new Database();
 // foreach (var user in Usernames){
 //     DB.ReadUser(user);

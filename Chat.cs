@@ -10,7 +10,7 @@ public class Chat {
     public List<string> Users;
     public LinkedList<Message> Messages = new LinkedList<Message>();
     private LinkedListNode<Message>? HistoryPointer = null;
-    public static string ChatsDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Chats");
+    public static string ChatsDirectory = Path.Combine(Database.DirectoryPath, "Chats");
     private string ChatFileName = "";
 
     public Chat(){
