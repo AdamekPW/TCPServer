@@ -1,16 +1,8 @@
-﻿
-
-List<string> Usernames = new(){"Adam", "Ola", "Kasia", "Piotr"};
-Chat chat = Chat.ReadFromFile(Usernames);
-chat.Print();
-// using Database DB = new Database();
-// foreach (var user in Usernames){
-//     DB.ReadUser(user);
-// }
-// foreach (var element in DB.Users){
-//     Console.WriteLine(element.Username);
-// }
-
-
-
-
+﻿List<string> Usernames = new(){"Adam", "Ola", "Kasia", "Piotr"};
+using Database DB = new();
+foreach (var element in Usernames){
+    DB.Users.Add(new User(element, "A"));
+}
+Chat chat = new Chat(Usernames);
+chat.AddMessage(new Message("Hello"));
+DB.Chats.Add(chat);

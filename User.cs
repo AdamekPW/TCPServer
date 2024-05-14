@@ -3,11 +3,11 @@ using System.Collections.ObjectModel;
 
 
 
-public class User: INotifyPropertyChanged {
-    private string? _username = null;
-    private string? _password = null;
+public class User: Model, INotifyPropertyChanged {
+    private string _username = null!;
+    private string _password = null!;
     private ObservableCollection<string> _chats = new();
-    public string? Username {
+    public string Username {
         get { return _username; }
         set 
         { 
@@ -29,7 +29,10 @@ public class User: INotifyPropertyChanged {
     public User(string Username, string Password){
         this.Username = Username;
         this._password = Password;
+        this.FileName = Username;
     }
+
+
 
     public event PropertyChangedEventHandler? PropertyChanged;
     protected virtual void OnPropertyChanged(string propertyName)

@@ -4,14 +4,12 @@ using Newtonsoft.Json;
 using System.Security.Cryptography;
 using System.Text;
 using System.IO;
-public class Chat {
+public class Chat : Model {
 
     public string name = "MyChat";
     public List<string> Users;
     public LinkedList<Message> Messages = new LinkedList<Message>();
     private LinkedListNode<Message>? HistoryPointer = null;
-    public static string ChatsDirectory = Path.Combine(Database.DirectoryPath, "Chats");
-    private string ChatFileName = "";
 
     public Chat(){
         Users = new List<string>();
@@ -19,12 +17,12 @@ public class Chat {
 
     public Chat(string User1, string User2){
         Users = new List<string>(){ User1, User2 };
-        ChatFileName = CreateFileName(this.Users);     
+        CreateFileName(Users);     
     }
     
     public Chat(List<string> Users){
         this.Users = Users;
-        ChatFileName = CreateFileName(this.Users);
+        CreateFileName(Users);
     }
 
     public void AddMessage(Message message){
@@ -43,11 +41,7 @@ public class Chat {
         return messages;
     }
 
-    public string FilePath {
-        get { return Path.Combine(ChatsDirectory, ChatFileName); }
-    }
-
-    private static string CreateFileName(List<string> Users){
+    private void CreateFileName(List<string> Users){
         Users.Sort();
         string input = "";
         string ChatFileName;
@@ -63,30 +57,14 @@ public class Chat {
             
             ChatFileName = builder.ToString();
         }
-        return ChatFileName;
+        this.FileName = ChatFileName;
     }
     
-    public static void WriteToFile(Chat chat){
-        chat.ChatFileName = CreateFileName(chat.Users);
-        string jsonData = JsonConvert.SerializeObject(chat, Formatting.Indented);
-        File.WriteAllText(chat.FilePath + ".json", jsonData);
-    }
 
-    public static Chat ReadFromFile(List<string> Users){
-        string FilePath = Path.Combine(ChatsDirectory, CreateFileName(Users));
-        string jsonData = File.ReadAllText(FilePath + ".json");
-        Chat? chat = JsonConvert.DeserializeObject<Chat>(jsonData);
-        if (chat == null){
-            Console.WriteLine("Nie znaleziono chatu, tworzenie nowego");
-            return new Chat();
-        } 
-        return chat;
-       
-    }
     
     public void Print(){
-            foreach (var item in Messages){
-                Console.WriteLine(item.Data);
-            }
+        foreach (var item in Messages){
+            Console.WriteLine(item.Data);
         }
+    }
 }
