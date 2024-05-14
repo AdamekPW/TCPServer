@@ -1,4 +1,5 @@
 using System.IO;
+using System.Reflection.Metadata;
 using Newtonsoft.Json;
 
 public class Database : IDisposable {
@@ -39,19 +40,30 @@ public class Database : IDisposable {
     }
 
     public static void Init(){
-        if (!Directory.Exists(DirectoryPath)){
-            Directory.CreateDirectory(DirectoryPath);
-            Console.WriteLine($"Created Database folder in {DirectoryPath}");
-        } else {
-            Console.WriteLine($"Database folder already exists");
-        }
+        Action<string> DictInit = (path) => {
+            string name = Path.GetFileNameWithoutExtension(path);
+            if (!Directory.Exists(path)){
+                Directory.CreateDirectory(path);
+                Console.WriteLine($"Created {name} folder in {path}");
+            } else {
+                Console.WriteLine($"Folder {name} already exists");
+            }
+        };
+        DictInit(DirectoryPath);
+        DictInit(UsersPath);
+        // if (!Directory.Exists(DirectoryPath)){
+        //     Directory.CreateDirectory(DirectoryPath);
+        //     Console.WriteLine($"Created Database folder in {DirectoryPath}");
+        // } else {
+        //     Console.WriteLine($"Database folder already exists");
+        // }
 
-        if (!Directory.Exists(UsersPath)){
-            Directory.CreateDirectory(UsersPath);
-            Console.WriteLine($"Created Users folder in {UsersPath}");
-        } else {
-            Console.WriteLine($"Users folder already exists");
-        }
+        // if (!Directory.Exists(UsersPath)){
+        //     Directory.CreateDirectory(UsersPath);
+        //     Console.WriteLine($"Created Users folder in {UsersPath}");
+        // } else {
+        //     Console.WriteLine($"Users folder already exists");
+        // }
         
 
 
