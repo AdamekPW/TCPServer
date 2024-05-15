@@ -2,7 +2,9 @@
 using System.Dynamic;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
-public class Model {
+
+
+public abstract class Model {
     
     public string FileName;
 
@@ -19,7 +21,7 @@ public class Model {
         string jsonData = JsonConvert.SerializeObject(this, Formatting.Indented);
         File.WriteAllText(ModelPath, jsonData);
     }
-
+    
 
 }
 
@@ -39,7 +41,7 @@ public class ModelList<T>: List<T> where T : Model {
        
         string ModelPath = Path.Combine(FilePath, FileName + ".json");
         if (!File.Exists(ModelPath)){
-            Console.WriteLine($"File {FileName}.json doesn't exists in the Users folder");
+            Console.WriteLine($"File {FileName}.json doesn't exists in the {typeof(T).Name}s folder");
             return;
         }
         

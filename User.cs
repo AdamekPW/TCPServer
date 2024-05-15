@@ -1,6 +1,6 @@
 using System.ComponentModel;
 using System.Collections.ObjectModel;
-
+using Newtonsoft.Json;
 
 
 public class User: Model, INotifyPropertyChanged {
@@ -39,4 +39,5 @@ public class User: Model, INotifyPropertyChanged {
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
+
 }

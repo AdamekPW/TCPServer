@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.IO;
 public class Chat : Model {
-
+    public uint id;
     public string name = "MyChat";
     public List<string> Users;
     public LinkedList<Message> Messages = new LinkedList<Message>();

@@ -1,8 +1,7 @@
 ﻿List<string> Usernames = new(){"Adam", "Ola", "Kasia", "Piotr"};
 using Database DB = new();
-foreach (var element in Usernames){
-    DB.Users.Add(new User(element, "A"));
+
+for (int i = 0; i < 10; i++){
+    Console.WriteLine(DB.UsersSequence.Next);
 }
-Chat chat = new Chat(Usernames);
-chat.AddMessage(new Message("Hello"));
-DB.Chats.Add(chat);
+
