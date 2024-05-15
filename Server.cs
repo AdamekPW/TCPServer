@@ -67,7 +67,7 @@ class Server {
 
                     // Utwórz nowy wątek do obsługi połączenia
                     Model? model = HandleClient(client);
-                    if (model != null) Console.WriteLine(model.GetType().Name);
+                    if (model != null) Console.WriteLine(model.type + " " + model.GetType());
                 }     
 				
             }
@@ -125,8 +125,16 @@ class Server {
 			dynamic? m = JsonConvert.DeserializeObject(JsonString);
             if (m != null){
                 Type type = (Type)m["type"];
-                Console.WriteLine(type.ToString());
+                switch (type.ToString()){
+                    case "User": 
+                        model = JsonConvert.DeserializeObject<User>(JsonString);;
+                        break;
+                    default: 
+                        model = null;
+                        break;
+                }
             }
+               
             
 		}
 		catch (Exception e)
@@ -135,7 +143,6 @@ class Server {
 		}
 		finally
 		{
-			
 			stream.Close();
 			client.Close();
 		}
