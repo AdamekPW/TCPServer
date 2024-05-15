@@ -4,16 +4,23 @@ using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 
 
-public abstract class Model {
+public class Model {
     
-    public string FileName;
+    public readonly Type type;
+    public string FileName = "";
 
+    
     public Model(){
-        FileName = "";
+        type = typeof(Model);
+    }
+    public Model(Type type){
+        
+        this.type = type;
     }
 
-    public Model(string FileName){
+    public Model(string FileName, Type type){
         this.FileName = FileName;
+        this.type = type;
     }
 
     public void Save(){

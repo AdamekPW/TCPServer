@@ -50,7 +50,7 @@ public class Sequence : Model {
     private uint _nextToGenerete;
     public uint Step;
 
-    public Sequence(uint Start, uint Step, string FileName){
+    public Sequence(uint Start, uint Step, string FileName) : base(typeof(Model)){
         Current = Start;
         this.Step = Step;
         this.FileName = FileName;

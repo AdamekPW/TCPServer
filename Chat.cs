@@ -11,16 +11,16 @@ public class Chat : Model {
     public LinkedList<Message> Messages = new LinkedList<Message>();
     private LinkedListNode<Message>? HistoryPointer = null;
 
-    public Chat(){
+    public Chat() : base(typeof(Chat)){
         Users = new List<string>();
     }
 
-    public Chat(string User1, string User2){
+    public Chat(string User1, string User2) : base(typeof(Chat)){
         Users = new List<string>(){ User1, User2 };
         CreateFileName(Users);     
     }
     
-    public Chat(List<string> Users){
+    public Chat(List<string> Users) : base(typeof(Chat)){
         this.Users = Users;
         CreateFileName(Users);
     }

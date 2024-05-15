@@ -8,6 +8,10 @@ class CustomClient
 
     private int bufferSize = 1024;
     //147.185.221.19:48025
+    public CustomClient(){
+        this.ServerIP = "127.0.0.1";
+        this.ServerPort = 48025;
+    }
 	public CustomClient(string ServerIP, int ServerPort)
 	{
 		this.ServerIP = ServerIP;
@@ -48,12 +52,13 @@ class CustomClient
         }
     }
 
-    public void SendMessage(Message message){
+    public void Send(Model model, bool delay = false){
+        if (delay) Thread.Sleep(1000);
         try {
             TcpClient client = new TcpClient(ServerIP, ServerPort);
             NetworkStream stream = client.GetStream();
         
-            string jsonData = JsonConvert.SerializeObject(message);
+            string jsonData = JsonConvert.SerializeObject(model);
             byte[] jsonDataBytes = Encoding.UTF8.GetBytes(jsonData);
 
             int bytesSent = 0;
@@ -69,6 +74,7 @@ class CustomClient
             Console.WriteLine("Error: " + e.Message);
         } 
     }
+    
 
 
 

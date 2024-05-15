@@ -26,7 +26,7 @@ public class User: Model, INotifyPropertyChanged {
     }
 
 
-    public User(string Username, string Password){
+    public User(string Username, string Password): base(typeof(User)){
         this.Username = Username;
         this._password = Password;
         this.FileName = Username;

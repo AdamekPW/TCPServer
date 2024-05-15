@@ -1,7 +1,9 @@
-﻿List<string> Usernames = new(){"Adam", "Ola", "Kasia", "Piotr"};
-using Database DB = new();
+﻿Server server = new Server();
+server.Start();
+CustomClient customClient = new();
+customClient.Send(new User("Adam", "D"), true);
 
-for (int i = 0; i < 10; i++){
-    Console.WriteLine(DB.UsersSequence.Next);
-}
+
+
+server.Stop();
 

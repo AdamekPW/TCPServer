@@ -14,6 +14,11 @@ class Server {
     Process? TunnelProcess = null;
     
     private bool IsServerRunning = false;
+
+    public Server(){
+        this.ServerIP = "127.0.0.1";
+        this.ServerPort = 48025;
+    }
     public Server(string ServerIP, int ServerPort){
         this.ServerIP = ServerIP;
         this.ServerPort = ServerPort;
@@ -61,14 +66,8 @@ class Server {
                     Console.WriteLine("Nowe połączenie!");
 
                     // Utwórz nowy wątek do obsługi połączenia
-                    
-                    Message? message = HandleClient(client);
-                    if (message != null){
-                        Console.WriteLine(message.Data);
-                        if (message.Data == "Stop"){
-                            server.Stop();
-                        }
-                    }
+                    Model? model = HandleClient(client);
+                    if (model != null) Console.WriteLine(model.GetType().Name);
                 }     
 				
             }
@@ -103,9 +102,9 @@ class Server {
     }
 
 
-    public Message? HandleClient(TcpClient client)
+    public Model? HandleClient(TcpClient client)
 	{
-		Message? message = null;
+		Model? model = null;
 		NetworkStream stream = null!;
 		try
 		{
@@ -123,8 +122,12 @@ class Server {
 					break;
 				}
 			}
-			message = JsonConvert.DeserializeObject<Message>(JsonString);
-
+			dynamic? m = JsonConvert.DeserializeObject(JsonString);
+            if (m != null){
+                Type type = (Type)m["type"];
+                Console.WriteLine(type.ToString());
+            }
+            
 		}
 		catch (Exception e)
 		{
@@ -136,6 +139,6 @@ class Server {
 			stream.Close();
 			client.Close();
 		}
-		return message;
+		return model;
 	}
 }
